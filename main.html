@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sapar — Цифрлық Туристік Платформасы</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            800: '#141c2e',
+                            900: '#0b1120',
+                            950: '#070b14',
+                        },
+                        gold: {
+                            400: '#FBBF24',
+                            500: '#D97706',
+                            600: '#B45309',
+                            accent: '#C59B27'
+                        },
+                        cream: '#FAF7F2'
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-cream text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="bg-navy-900 text-white sticky top-0 z-50 border-b border-slate-800/80 backdrop-blur-md bg-opacity-95">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- LOGO: sapar -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="resetFilters()">
+                <div class="w-10 h-10 rounded-full border-2 border-gold-accent flex items-center justify-center bg-navy-800 text-gold-accent shadow-lg">
+                    <i data-lucide="compass" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <span class="text-2xl font-extrabold tracking-tight text-white uppercase block leading-none">sapar</span>
+                    <span class="text-[10px] tracking-widest text-gold-accent font-semibold uppercase block mt-0.5">qazaqstan tourism</span>
+                </div>
+            </div>
+
+            <!-- MAIN MENU LINKS -->
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                <a href="#" onclick="filterCategory('all')" class="text-gold-accent font-semibold transition border-b-2 border-gold-accent pb-1" id="nav-discover">Главная</a>
+                <a href="#places-section" class="text-slate-300 hover:text-gold-accent transition" id="nav-tours">Туры</a>
+                <a href="#news-section" class="text-slate-300 hover:text-gold-accent transition" id="nav-news">Новости</a>
+                <button onclick="openFavoritesModal()" class="text-slate-300 hover:text-gold-accent transition flex items-center space-x-1.5 relative">
+                    <span id="nav-favorites">Избранное</span>
+                    <i data-lucide="heart" class="w-4 h-4 text-rose-500 fill-rose-500"></i>
+                    <span id="fav-count" class="bg-gold-500 text-navy-900 text-xs font-bold px-1.5 py-0.5 rounded-full ml-1">0</span>
+                </button>
+            </nav>
+
+            <!-- RIGHT CONTROLS: LANG SWITCH + BACKEND CODE TOGGLE + PROFILE -->
+            <div class="flex items-center space-x-4">
+                <button onclick="openCodeModal()" class="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-navy-800 border border-slate-700 text-xs text-gold-accent hover:bg-slate-800 transition shadow-sm" title="Посмотреть Spring Boot API Controller">
+                    <i data-lucide="code" class="w-4 h-4"></i>
+                    <span class="font-mono">Java API</span>
+                </button>
+
+                <!-- Language Selector -->
+                <div class="relative bg-navy-800 rounded-lg border border-slate-700 px-2 py-1 flex items-center text-xs">
+                    <i data-lucide="languages" class="w-3.5 h-3.5 text-gold-accent mr-1.5"></i>
+                    <select id="lang-select" onchange="changeLanguage(this.value)" class="bg-transparent text-white font-medium focus:outline-none cursor-pointer">
+                        <option value="ru" class="bg-navy-900 text-white">RU</option>
+                        <option value="kz" class="bg-navy-900 text-white">KZ</option>
+                        <option value="en" class="bg-navy-900 text-white">EN</option>
+                    </select>
+                </div>
+
+                <!-- Profile Button -->
+                <button class="w-9 h-9 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 hover:text-white hover:border-gold-accent transition">
+                    <i data-lucide="user" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero-gradient text-white pt-12 pb-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            
+            <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-800/70 border border-gold-accent/30 text-gold-accent text-xs font-semibold uppercase tracking-wider mb-6">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                <span>От Великого Шелкового пути к инновациям</span>
+            </div>
+
+            <h1 id="hero-title" class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 text-white leading-tight">
+                Открой Казахстан вместе с sapar
+            </h1>
+            <p id="hero-subtitle" class="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-10 font-normal">
+                Исследуйте великую степь, величественные горы, священные места и современные мегаполисы в единой цифровой экосистеме.
+            </p>
+
+            <!-- SMART SEARCH BAR CONTAINER -->
+            <div class="bg-white p-3 sm:p-4 rounded-2xl sm:rounded-full shadow-2xl max-w-3xl mx-auto border-2 border-gold-accent/40 flex flex-col sm:flex-row items-center gap-3">
+                <div class="flex items-center w-full sm:w-1/2 px-4 py-2 border-b sm:border-b-0 sm:border-r border-slate-200">
+                    <i data-lucide="search" class="w-5 h-5 text-slate-400 mr-3 flex-shrink-0"></i>
+                    <input type="text" id="search-input" onkeyup="handleSearch()" placeholder="Куда вы хотите отправиться?" class="w-full text-slate-800 placeholder-slate-400 text-sm focus:outline-none bg-transparent">
+                </div>
+
+                <div class="flex items-center w-full sm:w-1/3 px-4 py-2">
+                    <i data-lucide="map-pin" class="w-5 h-5 text-gold-500 mr-2 flex-shrink-0"></i>
+                    <select id="city-select" onchange="handleCityFilter()" class="w-full text-slate-800 text-sm bg-transparent focus:outline-none cursor-pointer font-medium">
+                        <option value="all">Все города</option>
+                        <option value="Алматы">Алматы</option>
+                        <option value="Астана">Астана</option>
+                        <option value="Шымкент">Шымкент</option>
+                        <option value="Мангистау">Мангистау</option>
+                        <option value="Алматинская обл.">Алматинская обл.</option>
+                        <option value="Акмолинская обл.">Акмолинская обл.</option>
+                    </select>
+                </div>
+
+                <button onclick="handleSearch()" class="w-full sm:w-auto px-8 py-3.5 rounded-xl sm:rounded-full gold-gradient-bg text-navy-900 font-bold text-sm hover:brightness-110 transition shadow-md flex items-center justify-center space-x-2">
+                    <span id="btn-search-text">Поиск</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <!-- CATEGORY FILTER CHIPS -->
+            <div class="mt-10 flex flex-wrap justify-center gap-2 sm:gap-3 max-w-4xl mx-auto" id="categories-container"></div>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT SECTION: DESTINATIONS & PLACES -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 mb-16 relative z-20 flex-grow">
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+            <div>
+                <h2 id="section-places-title" class="text-2xl sm:text-3xl font-bold text-navy-900 tracking-tight">Популярные места</h2>
+                <p id="section-places-sub" class="text-slate-500 text-sm mt-1">Топ локаций Казахстана для вашего следующего путешествия</p>
+            </div>
+
+            <div class="flex items-center space-x-4 text-xs font-semibold text-slate-600 bg-slate-100 px-4 py-2.5 rounded-xl">
+                <span>Найдено: <strong id="results-count" class="text-gold-600 text-sm">0</strong></span>
+                <span class="text-slate-300">|</span>
+                <span id="active-filter-label" class="text-slate-700">Фильтр: Все</span>
+            </div>
+        </div>
+
+        <div id="places-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+
+        <div id="no-results" class="hidden bg-white p-12 rounded-2xl text-center border border-slate-200 shadow-sm my-8">
+            <i data-lucide="map-off" class="w-12 h-12 text-slate-300 mx-auto mb-3"></i>
+            <h3 class="text-lg font-bold text-navy-900">Ничего не найдено</h3>
+            <p class="text-slate-500 text-sm mt-1 mb-4">Попробуйте изменить категорию или город в поиске.</p>
+            <button onclick="resetFilters()" class="px-5 py-2 rounded-lg bg-navy-900 text-gold-accent font-semibold text-xs hover:bg-slate-800 transition">Сбросить фильтры</button>
+        </div>
+
+        <!-- AI TOUR BUDGET CALCULATOR BANNER -->
+        <section id="places-section" class="mt-16 bg-navy-900 rounded-3xl p-8 sm:p-12 text-white relative overflow-hidden shadow-2xl border border-slate-800">
+            <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
+                <i data-lucide="compass" class="w-96 h-96 text-gold-accent"></i>
+            </div>
+            
+            <div class="max-w-3xl relative z-10">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-gold-500/20 text-gold-accent text-xs font-bold uppercase mb-4">
+                    <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+                    <span>ИИ-Калькулятор Тура</span>
+                </div>
+                <h2 class="text-2xl sm:text-4xl font-extrabold mb-4">Подберите идеальную программу под ваш бюджет</h2>
+                <p class="text-slate-300 text-sm sm:text-base mb-8">Укажите ваш бюджет и предпочтения — наш алгоритм sapar составит персональный маршрут по Казахстану и подберет попутчиков.</p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1">Бюджет (₸ KZT)</label>
+                        <input type="number" id="calc-budget" value="150000" class="w-full bg-navy-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:border-gold-accent focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1">Количество дней</label>
+                        <select id="calc-days" class="w-full bg-navy-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:border-gold-accent focus:outline-none">
+                            <option value="3">3 дня</option>
+                            <option value="5" selected>5 дней</option>
+                            <option value="7">7 дней</option>
+                            <option value="10">10+ дней</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1">Количество участников</label>
+                        <select id="calc-people" class="w-full bg-navy-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:border-gold-accent focus:outline-none">
+                            <option value="1">Соло (1)</option>
+                            <option value="2" selected>Пара (2)</option>
+                            <option value="4">Группа (3-5)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button onclick="calculateAiTour()" class="px-8 py-3.5 rounded-xl gold-gradient-bg text-navy-900 font-bold text-sm hover:brightness-110 transition shadow-lg flex items-center space-x-2">
+                    <i data-lucide="wand-2" class="w-4 h-4"></i>
+                    <span>Рассчитать программу тура</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- TOURISM NEWS SECTION -->
+        <section id="news-section" class="mt-16">
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-navy-900">Новости туризма</h2>
+                    <p class="text-slate-500 text-sm mt-1">События, открытие новых маршрутов и культурные фестивали</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm hover:shadow-md transition">
+                    <span class="text-xs font-bold text-gold-600 bg-gold-50 px-2.5 py-1 rounded-md">Фестивали</span>
+                    <span class="text-xs text-slate-400 ml-2">12 Ноября, 2026</span>
+                    <h3 class="font-bold text-navy-900 mt-3 mb-2 hover:text-gold-600 cursor-pointer">Международный этно-фестиваль в Туркестане</h3>
+                    <p class="text-slate-600 text-xs line-clamp-2">В древнем городе собираются ремесленники со всей Центральной Азии для демонстрации уникального наследия Шелкового пути.</p>
+                </div>
+                <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm hover:shadow-md transition">
+                    <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-md">Инфраструктура</span>
+                    <span class="text-xs text-slate-400 ml-2">28 Октября, 2026</span>
+                    <h3 class="font-bold text-navy-900 mt-3 mb-2 hover:text-gold-600 cursor-pointer">Открытие эко-троп в глэмпинге Катон-Карагая</h3>
+                    <p class="text-slate-600 text-xs line-clamp-2">Новые маркированные пешеходные маршруты с современной цифровой навигацией запущены для туристов в Восточном Казахстане.</p>
+                </div>
+                <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm hover:shadow-md transition">
+                    <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md">Новое место</span>
+                    <span class="text-xs text-slate-400 ml-2">15 Октября, 2026</span>
+                    <h3 class="font-bold text-navy-900 mt-3 mb-2 hover:text-gold-600 cursor-pointer">Визит-центр Мангистау запустил 3D туры</h3>
+                    <p class="text-slate-600 text-xs line-clamp-2">Теперь перед поездкой на Бозжыра туристы могут изучить геологические локации в VR пространстве.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-navy-900 text-slate-400 text-sm py-12 border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div>
+                <div class="flex items-center space-x-2 mb-4">
+                    <i data-lucide="compass" class="w-6 h-6 text-gold-accent"></i>
+                    <span class="text-xl font-extrabold text-white uppercase tracking-wider">sapar</span>
+                </div>
+                <p class="text-xs text-slate-400">Национальная цифровая веб-платформа для развития туризма в Республике Казахстан.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold text-xs uppercase tracking-wider mb-3">Навигация</h4>
+                <ul class="space-y-2 text-xs">
+                    <li><a href="#" class="hover:text-gold-accent">Главная</a></li>
+                    <li><a href="#places-section" class="hover:text-gold-accent">Туры и калькулятор</a></li>
+                    <li><a href="#news-section" class="hover:text-gold-accent">Новости и дайджест</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold text-xs uppercase tracking-wider mb-3">Технологии</h4>
+                <ul class="space-y-2 text-xs">
+                    <li><span>Backend: Java Spring Boot 3</span></li>
+                    <li><span>Auth: Spring Security + JWT</span></li>
+                    <li><span>DB: PostgreSQL Multi-language</span></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold text-xs uppercase tracking-wider mb-3">Контакты</h4>
+                <p class="text-xs">Email: info@sapar.kz</p>
+                <p class="text-xs mt-1">Astana Hub, Qazaqstan</p>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 border-t border-slate-800 text-center text-xs text-slate-500">
+            © 2026 sapar Platform. Все права защищены.
+        </div>
+    </footer>
+
+    <!-- MODAL 1: PLACE DETAILS MODAL -->
+    <div id="place-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl animate-fade-in relative">
+            <button onclick="closePlaceModal()" class="absolute top-4 right-4 bg-navy-900/80 text-white p-2 rounded-full hover:bg-navy-900 z-10">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: FAVORITES MODAL -->
+    <div id="favorites-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative">
+            <div class="flex justify-between items-center mb-4 border-b pb-3">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="heart" class="w-5 h-5 text-rose-500 fill-rose-500"></i>
+                    <h3 class="text-xl font-bold text-navy-900">Избранные места</h3>
+                </div>
+                <button onclick="closeFavoritesModal()" class="text-slate-400 hover:text-slate-700">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div id="favorites-list" class="max-h-80 overflow-y-auto space-y-3 pr-1"></div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: JAVA SPRING BOOT CODE -->
+    <div id="code-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-navy-900 border border-slate-800 rounded-3xl max-w-3xl w-full p-6 shadow-2xl text-white relative">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="code" class="w-5 h-5 text-gold-accent"></i>
+                    <h3 class="text-lg font-bold text-white">Backend Controller Architecture (Java Spring Boot)</h3>
+                </div>
+                <button onclick="closeCodeModal()" class="text-slate-400 hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <p class="text-xs text-slate-400 mb-3">Этот фрагмент Java кода обрабатывает запросы к API sapar:</p>
+            <pre class="bg-navy-950 p-4 rounded-xl text-emerald-400 text-xs overflow-x-auto code-font border border-slate-800 leading-relaxed">
+<span class="text-purple-400">@RestController</span>
+<span class="text-purple-400">@RequestMapping</span>(<span class="text-amber-300">"/api/v1"</span>)
+<span class="text-purple-400">@CrossOrigin</span>(origins = <span class="text-amber-300">"*"</span>)
+<span class="text-blue-400">public class</span> <span class="text-yellow-200">SaparTourismController</span> {
+
+    <span class="text-purple-400">@Autowired</span>
+    <span class="text-blue-400">private</span> CityTourismService cityService;
+
+    <span class="text-purple-400">@GetMapping</span>(<span class="text-amber-300">"/cities/{id}"</span>)
+    <span class="text-blue-400">public</span> ResponseEntity&lt;CityDto&gt; getCity(
+            <span class="text-purple-400">@PathVariable</span> Long id,
+            <span class="text-purple-400">@RequestHeader</span>(value = <span class="text-amber-300">"Accept-Language"</span>, defaultValue = <span class="text-amber-300">"ru"</span>) String lang) {
+        <span class="text-blue-400">return</span> ResponseEntity.ok(cityService.getLocalizedCity(id, lang));
+    }
+
+    <span class="text-purple-400">@GetMapping</span>(<span class="text-amber-300">"/places"</span>)
+    <span class="text-blue-400">public</span> ResponseEntity&lt;List&lt;PlaceDto&gt;&gt; getFilteredPlaces(
+            <span class="text-purple-400">@RequestParam</span>(required = <span class="text-blue-400">false</span>) String category,
+            <span class="text-purple-400">@RequestParam</span>(required = <span class="text-blue-400">false</span>) String city) {
+        <span class="text-blue-400">return</span> ResponseEntity.ok(cityService.getPlaces(category, city));
+    }
+}</pre>
+            <div class="mt-4 flex justify-end">
+                <button onclick="closeCodeModal()" class="px-4 py-2 bg-gold-500 text-navy-900 font-bold rounded-xl text-xs">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="js/data.js"></script>
+    <script src="js/lang.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
